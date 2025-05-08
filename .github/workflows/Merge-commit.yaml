@@ -1,0 +1,49 @@
+name: Actualizar Componentes
+run-name: Push hecho por parte de ${{ github.actor }}
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  actualizar-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+      
+      - name: Conseguir los nombres de los .json
+        id: lista-json
+        run: |
+          all_archivos=$(find . -maxdepth 1 -type f -name "*.json" -exec basename {} .json \;)
+          echo "archivos=$all_archivos" >> $GITHUB_OUTPUT
+
+      - name: Actualizar los nuevos componentes
+        run: |
+          componentes="${{ steps.lista-json.outputs.archivos }}"
+          options=$(echo "$componentes" | sed 's/^/    - /')
+
+          sed -i  "/component:/,/options:/ {
+              /options:/ {  
+                n
+                s|.*|$options|
+              }
+          }" .github/workflows/Deploy.yml
+
+      - name: Crear una nueva rama
+        run: |
+          git config user.name "HamzaAmraoui"
+          git config user.email "hamzafuego2@gmail.com"
+          git checkout -b feature/change-inputs-components
+          git add .github/workflows/Deploy.yml
+          git commit -m "Actualización de componentes"
+          git push https://x-access-token:${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }} HEAD:feature/change-inputs-components
+
+      - name: Crear Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.MY_TOKEN }}  
+          branch: feature/change-inputs-components
+          base: develop
+          title: "Actualización de opciones de componentes en Deploy.yml"
