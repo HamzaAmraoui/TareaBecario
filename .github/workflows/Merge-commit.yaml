@@ -4,7 +4,7 @@ run-name: Push hecho por parte de ${{ github.actor }}
 on: 
   push:
     branches:
-      - main
+      - develop
 permissions:
       contents: write  
       pull-requests: write 
@@ -39,7 +39,7 @@ jobs:
               }
           }" .github/workflows/Deploy.yml
 
-      - name: Crear nueva rama y hacer push con token
+      - name: Crear nueva rama 
         run: |
             git config --global user.name "HamzaAmraoui"
             git config --global user.email "hamzafuego2@gmail.com"
@@ -50,7 +50,6 @@ jobs:
       - name: Crear Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-            token: ${{ secrets.MY_TOKEN }}
             branch: feature/change-inputs-components
             base: develop
             title: "Actualización de opciones de componentes en Deploy.yml"
