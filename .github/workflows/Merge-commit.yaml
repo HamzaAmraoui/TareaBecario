@@ -11,9 +11,6 @@ permissions:
 jobs:
   actualizar-deploy:
     runs-on: ubuntu-latest
-    env:
-      TOKEN: ${{ secrets.MY_TOKEN }}   
-
     steps:
       
       - name: Clonar repositorio
@@ -39,9 +36,7 @@ jobs:
                 s|.*|$options|
               }
           }" .github/workflows/Deploy.yml
-      - name: Setup .netrc for authentication
-        run: |
-            echo -e "machine github.com\nlogin ${{ github.actor }}\npassword ${{ secrets.MY_TOKEN }}" > ~/.netrc
+      
       - name: Crear nueva rama 
         run: |
             git config --global user.name "HamzaAmraoui"
@@ -49,7 +44,7 @@ jobs:
             git checkout -b feature/change-inputs-components
             git add .github/workflows/Deploy.yml
             git commit -m "Actualización automática de opciones de componentes"
-             git push https://x-access-token:$TOKEN@github.com/${{ github.repository }} HEAD:feature/change-inputs-components
+             git push https://x-access-token:${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }} HEAD:feature/change-inputs-components
 
         
       - name: Crear Pull Request
