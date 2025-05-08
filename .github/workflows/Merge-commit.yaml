@@ -16,12 +16,10 @@ jobs:
       - name: Conseguir los nombres de los .json
         id: lista-json
         run: |
-          all_archivos=$(find . -maxdepth 1 -type f -name "*.json" -exec basename {} .json \;)
+          archivos=$(find . -maxdepth 1 -type f -name "*.json" -exec basename {} .json \;)
            
-           echo "archivos<<EOF" >> $GITHUB_OUTPUT
-           echo "$all_archivos" >> $GITHUB_OUTPUT
-           echo "EOF" >> $GITHUB_OUTPUT
-           
+          echo "ARCHIVOS=$archivos" >> $GITHUB_ENV
+
       - name: Actualizar los nuevos componentes
         run: |
           componentes="${{ steps.lista-json.outputs.archivos }}"
