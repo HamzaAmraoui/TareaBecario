@@ -41,7 +41,7 @@ jobs:
       
       - name: Crear nueva rama 
         run: |
-            git config --global user.name ""
+            git config --global user.name "${{github.actor}}"
             git config --global user.email "hamzafuego2@gmail.com"
             git checkout -b feature/change-inputs-components
             git add .github/workflows/Deploy.yml
