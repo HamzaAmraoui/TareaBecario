@@ -9,9 +9,6 @@ on:
 jobs:
   actualizar-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write 
-      pull-requests: write 
     steps:
       
       - name: Clonar repositorio
@@ -40,12 +37,12 @@ jobs:
 
       - name: Crear una nueva rama
         run: |
-          git config user.name "HamzaAmraoui"
-          git config user.email "hamzafuego2@gmail.com"
-          git checkout -b feature/change-inputs-components
-          git add .github/workflows/Deploy.yml
-          git commit -m "Actualización de componentes"
-          git push https://x-access-token:${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }} HEAD:feature/change-inputs-components
+            git config --global user.name "HamzaAmraoui"
+            git config --global user.email "hamzafuego2@gmail.com"
+            git checkout -b feature/change-inputs-components
+            git add .github/workflows/deploy.yml
+            git commit -m "Actualización automática de opciones de componentes"
+            git push origin feature/change-inputs-components
 
       - name: Crear Pull Request
         uses: peter-evans/create-pull-request@v5
