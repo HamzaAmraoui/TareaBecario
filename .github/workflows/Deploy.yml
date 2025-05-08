@@ -1,0 +1,29 @@
+name: Deploy Component
+run-name: Este workflow está ejecutado por ${{ github.actor }}
+
+on:
+    workflow_dispatch:
+        inputs:
+            entorno:
+                description: "¿En que entorno quieres desplegar?"
+                required: true
+                type: choice
+                default: dev
+                options:
+                    - dev
+                    - pre
+                    - pro
+        component:
+            description: "Componentes .json a desplegar"
+            required: true
+            type: choice
+            options:
+                - Seleccionar componentes
+jobs:
+    deploy-inputs:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Mostrar inputs 
+              run: |
+                echo "Entorno seleccionado: ${{ inputs.entorno }}"
+                echo "Componente seleccionado: ${{ inputs.component }}"
