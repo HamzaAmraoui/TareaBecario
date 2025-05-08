@@ -40,7 +40,7 @@ jobs:
             git config --global user.name "HamzaAmraoui"
             git config --global user.email "hamzafuego2@gmail.com"
             git checkout -b feature/change-inputs-components
-            git add .github/workflows/deploy.yml
+            git add .github/workflows/Deploy.yml
             git commit -m "Actualización automática de opciones de componentes"
             git push origin feature/change-inputs-components
 
