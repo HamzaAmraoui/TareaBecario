@@ -41,17 +41,17 @@ jobs:
 
       - name: Crear una nueva rama
         run: |
-            git config --global user.name "HamzaAmraoui"
-            git config --global user.email "hamzafuego2@gmail.com"
-            git checkout -b feature/change-inputs-components
-            git add .github/workflows/Deploy.yml
-            git commit -m "Actualización automática de opciones de componentes"
-            git push origin feature/change-inputs-components
+          git config --global user.name "HamzaAmraoui"
+          git config --global user.email "hamzafuego2@gmail.com"
+          git checkout -b feature/change-inputs-components
+          git add .github/workflows/Deploy.yml
+          git commit -m "Actualización automática de opciones de componentes"
+          git push https://x-access-token:${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }} HEAD:feature/change-inputs-components
 
       - name: Crear Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.MY_TOKEN }}  
+          token: ${{ secrets.MY_TOKEN }}
           branch: feature/change-inputs-components
           base: develop
           title: "Actualización de opciones de componentes en Deploy.yml"
