@@ -46,7 +46,7 @@ jobs:
             git checkout -b feature/change-inputs-components
             git add .github/workflows/Deploy.yml
             git commit -m "Actualización automática de opciones de componentes"
-             git push https://x-access-token:${{ secrets.github_token }}@github.com/${{ github.repository }} HEAD:feature/change-inputs-components
+             git push https://x-access-token:${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }} HEAD:feature/change-inputs-components
 
         
       - name: Crear Pull Request
