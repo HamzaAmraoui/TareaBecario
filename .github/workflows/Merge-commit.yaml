@@ -9,7 +9,11 @@ on:
 jobs:
   actualizar-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write 
+      pull-requests: write 
     steps:
+      
       - name: Clonar repositorio
         uses: actions/checkout@v4
       
