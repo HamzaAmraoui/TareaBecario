@@ -13,12 +13,12 @@ on:
                     - dev
                     - pre
                     - pro
-        component:
-            description: "Componentes .json a desplegar"
-            required: true
-            type: choice
-            options:
-                - Seleccionar componentes
+            component:
+                description: "Componentes .json a desplegar"
+                required: true
+                type: choice
+                options:
+                    - Seleccionar componentes
 jobs:
     deploy-inputs:
         runs-on: ubuntu-latest
