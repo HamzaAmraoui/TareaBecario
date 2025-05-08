@@ -39,7 +39,9 @@ jobs:
                 s|.*|$options|
               }
           }" .github/workflows/Deploy.yml
-
+      - name: Setup .netrc for authentication
+        run: |
+            echo -e "machine github.com\nlogin ${{ github.actor }}\npassword ${{ secrets.MY_TOKEN }}" > ~/.netrc
       - name: Crear nueva rama 
         run: |
             git config --global user.name "HamzaAmraoui"
