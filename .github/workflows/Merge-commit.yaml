@@ -47,6 +47,9 @@ jobs:
         
       - name: Crear rama y hacer push
         run: |
+            
+            git config --global user.email "hamzafuego2@gmail.com"
+            git config --global user.name "${{github.actor}}"
             git checkout -b feature/mi-rama
             git add .
             git commit -m "Cambios automáticos"
@@ -54,8 +57,14 @@ jobs:
 
         
       - name: Crear Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-            branch: feature/change-inputs-components
-            base: develop
-            title: "Actualización de opciones de componentes en Deploy.yml"
+        run: |
+              curl -X POST \
+                -H "Authorization: Bearer ${{ secrets.MY_TOKEN}}" \
+                -H "Accept: application/vnd.github.v3+json" \
+                https://api.github.com/repos/${{ github.repository }}/pulls \
+                -d '{
+                  "title": "Actualización de opciones de componentes en Deploy.yml",
+                  "head": "feature/change-inputs-components",
+                  "base": "develop",
+                  "body": "Este Pull Request actualiza las opciones de componentes en Deploy.yml."
+                }'
