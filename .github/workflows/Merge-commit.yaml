@@ -43,19 +43,13 @@ jobs:
       
       - name: Crear nueva rama 
         run: |
-           git config --global user.name "${{ github.actor }}"
-           git config --global user.email "hamzafuego2@gmail.com"
-           git remote set-url origin "https://${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }}.git"
-           git checkout -B feature/change-inputs-components
-           git add .github/workflows/Deploy.yml
-
-           if git diff --cached --quiet; then
-           echo "No hay cambios para commitear."
-           exit 0
-           fi
-
-           git commit -m "Actualización automática de opciones de componentes"
-           git push --set-upstream origin feature/change-inputs-components -f
+            git config --global user.name "${{github.actor}}"
+            git config --global user.email "hamzafuego2@gmail.com"
+            git remote add gh-token "https://${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }}.git"
+            git checkout -B feature/change-inputs-components
+            git add .github/workflows/Deploy.yml
+            git commit -m "Actualización automática de opciones de componentes"
+            git push --set-upstream origin feature/change-inputs-components -f 
 
         
       - name: Crear Pull Request
