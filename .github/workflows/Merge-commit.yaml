@@ -4,20 +4,22 @@ run-name: Push hecho por parte de ${{ github.actor }}
 on: 
   push:
     branches:
-      - main
+      - develop
+  workflow_dispatch:
+
 permissions:
       contents: write  
-      pull-requests: write 
+      pull-requests: write
+  
 jobs:
   actualizar-deploy:
     runs-on: ubuntu-latest
-     
-
     steps:
       
       - name: Clonar repositorio
         uses: actions/checkout@v4
-      
+        with:
+          token: ${{ secrets.GITHUB_TOKEN  }}
       - name: Conseguir los nombres de los .json
         id: lista-json
         run: |
@@ -38,20 +40,27 @@ jobs:
                 s|.*|$options|
               }
           }" .github/workflows/Deploy.yml
-
+      
       - name: Crear nueva rama 
         run: |
-            git config --global user.name "HamzaAmraoui"
+            git config --global user.name "${{github.actor}}"
             git config --global user.email "hamzafuego2@gmail.com"
-            git checkout -b feature/change-inputs-components
+            git remote add gh-token "https://${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }}.git"
+            git checkout -B feature/change-inputs-components
             git add .github/workflows/Deploy.yml
             git commit -m "Actualización automática de opciones de componentes"
-             git push https://x-access-token:${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }} HEAD:feature/change-inputs-components
+            git push --set-upstream origin feature/change-inputs-components -f 
 
         
       - name: Crear Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-            branch: feature/change-inputs-components
-            base: develop
-            title: "Actualización de opciones de componentes en Deploy.yml"
+        run: |
+              curl -X POST \
+                -H "Authorization: Bearer ${{ secrets.MY_TOKEN }}" \
+                -H "Accept: application/vnd.github.v3+json" \
+                https://api.github.com/repos/${{ github.repository }}/pulls \
+                -d '{
+                  "title": "Actualización de opciones de componentes en Deploy.yml",
+                  "head": "feature/change-inputs-components",
+                  "base": "develop",
+                  "body": "Este Pull Request actualiza las opciones de componentes en Deploy.yml."
+                }'
