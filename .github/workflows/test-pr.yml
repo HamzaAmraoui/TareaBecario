@@ -1,0 +1,42 @@
+name: Test PR Auto
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  test-push-and-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Create test file
+        run: |
+          echo "# prueba" >> test.txt
+
+      - name: Commit and push new branch
+        run: |
+          git checkout -b feature/test-auto-pr
+          git add test.txt
+          git commit -m "Add test file"
+          git push origin feature/test-auto-pr
+
+      - name: Auth with GitHub CLI
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+      - name: Create Pull Request with gh
+        run: |
+          gh pr create \
+            --title "PR automático de prueba" \
+            --body "Este PR fue creado automáticamente." \
+            --head feature/test-auto-pr \
+            --base develop
