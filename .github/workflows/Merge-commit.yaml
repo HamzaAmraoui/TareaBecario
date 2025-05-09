@@ -19,7 +19,7 @@ jobs:
       - name: Clonar repositorio
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.github_token }}
+          token: ${{ secrets.GITHUB_TOKEN  }}
       - name: Conseguir los nombres de los .json
         id: lista-json
         run: |
@@ -45,7 +45,7 @@ jobs:
         run: |
             git config --global user.name "${{github.actor}}"
             git config --global user.email "hamzafuego2@gmail.com"
-            git remote add gh-token "https://${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }}.git"
+            git remote set-url origin "https://${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }}.git"
             git checkout -B feature/change-inputs-components
             git add .github/workflows/Deploy.yml
             git commit -m "Actualización automática de opciones de componentes"
