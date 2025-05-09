@@ -4,8 +4,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
+  
+    contents: write
+    pull-requests: write
 
 jobs:
   test-push-and-pr:
