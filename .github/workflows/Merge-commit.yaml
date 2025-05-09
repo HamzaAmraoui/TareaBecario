@@ -43,10 +43,10 @@ jobs:
         run: |
             git config --global user.name "${{github.actor}}"
             git config --global user.email "hamzafuego2@gmail.com"
-            git checkout -b feature/change-inputs-components
+            git checkout -B feature/change-inputs-components
             git add .github/workflows/Deploy.yml
             git commit -m "Actualización automática de opciones de componentes"
-             git push https://x-access-token:${{ secrets.github_token }}@github.com/${{ github.repository }} HEAD:feature/change-inputs-components
+            git push https://x-access-token:${{ secrets.github_token }}@github.com/${{ github.repository }} 
 
         
       - name: Crear Pull Request
