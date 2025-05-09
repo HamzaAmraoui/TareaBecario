@@ -39,14 +39,18 @@ jobs:
               }
           }" .github/workflows/Deploy.yml
       
-      - name: Crear nueva rama 
+      - name: Instalar GitHub CLI
+        run: sudo apt install gh
+        
+      - name: Autenticarse con gh
+        run: echo "${{ secrets.MY_TOKEN }}" | gh auth login --with-token
+        
+      - name: Crear rama y hacer push
         run: |
-            git config --global user.name "${{github.actor}}"
-            git config --global user.email "hamzafuego2@gmail.com"
-            git checkout -B feature/change-inputs-components
-            git add .github/workflows/Deploy.yml
-            git commit -m "Actualización automática de opciones de componentes"
-            git push https://x-access-token:${{ secrets.github_token }}@github.com/${{ github.repository }} 
+            git checkout -b feature/mi-rama
+            git add .
+            git commit -m "Cambios automáticos"
+            git push origin feature/mi-rama
 
         
       - name: Crear Pull Request
