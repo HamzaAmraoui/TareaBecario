@@ -9,6 +9,7 @@ permissions:
       contents: write  
       pull-requests: write
 
+
 jobs:
   actualizar-deploy:
     runs-on: ubuntu-latest
@@ -43,10 +44,11 @@ jobs:
         run: |
             git config --global user.name "${{github.actor}}"
             git config --global user.email "hamzafuego2@gmail.com"
+            git remote add gh-token "https://${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }}.git"
             git checkout -B feature/change-inputs-components
             git add .github/workflows/Deploy.yml
             git commit -m "Actualización automática de opciones de componentes"
-            git push https://x-access-token:${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }} 
+            git push --set-upstream origin feature/change-inputs-components -f 
 
         
       - name: Crear Pull Request
