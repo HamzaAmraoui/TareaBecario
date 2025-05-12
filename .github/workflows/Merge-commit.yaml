@@ -32,7 +32,7 @@ jobs:
       - name: Actualizar los nuevos componentes
         run: |
           componentes="${{ steps.lista-json.outputs.archivos }}"
-          options=$(echo "$componentes" | sed 's/^/        - /')
+          options=$(echo "$componentes" | sed 's/^/              - /')
 
           awk -v new_options="$options" '
           /component:/ { print; in_block=1; next }
