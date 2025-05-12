@@ -1,56 +1,63 @@
 name: Actualizar Componentes
 run-name: Push hecho por parte de ${{ github.actor }}
 
-on:
+on: 
   push:
     branches:
-      - main
+      - develop
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
+      contents: write  
+      pull-requests: write
 
 jobs:
   actualizar-deploy:
     runs-on: ubuntu-latest
     steps:
+
       - name: Clonar repositorio
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.MY_TOKEN }}
-
-      - name: Conseguir rutas completas de los .json sin extensión
+          token: ${{ secrets.MY_TOKEN  }}
+      - name: Conseguir los nombres de los .json
+        id: lista-json
         run: |
-          find . -type f -name "*.json" | sed 's/\.json$//' > lista_componentes.txt
+          all_archivos=$(find . -type f -name "*.json" | sed 's/\.json$//')
+
+           echo "archivos<<EOF" >> $GITHUB_OUTPUT
+           echo "$all_archivos" >> $GITHUB_OUTPUT
+           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Actualizar los nuevos componentes
         run: |
-            options=""
-            while IFS= read -r line; do
-              options="${options}                          - ${line}"$'\n'
-            done < lista_componentes.txt
-            echo "Contenido de lista_componentes.txt:"
-            cat lista_componentes.txt
-        
-            sed -i "/options:/,/^$/{
-                /options:/!b
-                /options:/a\\
-                $(cat opciones.txt)
-            }" .github/workflows/Deploy.yml
+          componentes="${{ steps.lista-json.outputs.archivos }}"
+          options=$(echo "$componentes" | sed 's/^/                          - /')
 
-      - name: Verificar Deploy.yml modificado
-        run: cat .github/workflows/Deploy.yml
-        
+          awk -v new_options="$options" '
+          /component:/ { print; in_block=1; next }
+          /options:/ && in_block {
+          print
+          print new_options
+          skip=1
+          next
+          }
+          in_block && skip {
+          if (/^[[:space:]]*-/) next
+          else { in_block=0; skip=0 }
+          }
+          { print }
+          ' .github/workflows/Deploy.yml > temp && mv temp .github/workflows/Deploy.yml
 
-      - name: Crear nueva rama
+      - name: Crear nueva rama 
         run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "hamzafuego2@gmail.com"
-          git checkout -B feature/change-inputs-components
-          git add .github/workflows/Deploy.yml
-          git commit -m "Actualización automática de opciones de componentes"
-          git push --set-upstream origin feature/change-inputs-components -f
+            git config --global user.name "${{github.actor}}"
+            git config --global user.email "hamzafuego2@gmail.com"
+            git checkout -B feature/change-inputs-components
+            git add .github/workflows/Deploy.yml
+            git commit -m "Actualización automática de opciones de componentes"
+            git push --set-upstream origin feature/change-inputs-components -f 
+
 
       - name: Crear Pull Request en el repositorio oficial usando create-pull-request
         uses: peter-evans/create-pull-request@v4
