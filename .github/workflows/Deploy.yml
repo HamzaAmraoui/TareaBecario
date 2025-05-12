@@ -19,9 +19,10 @@ on:
                 required: true
                 type: choice
                 options:
-                          - fichero3
-                          - fichero1
-                          - fichero2
+                           - fichero3
+                           - fichero1
+                           - fichero2
+
 jobs:
     deploy-inputs:
         runs-on: ubuntu-latest
