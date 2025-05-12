@@ -19,7 +19,7 @@ on:
                 required: true
                 type: choice
                 options:
-                    - Seleccionar componentes
+                           - Seleccionar componentes
 jobs:
     deploy-inputs:
         runs-on: ubuntu-latest
