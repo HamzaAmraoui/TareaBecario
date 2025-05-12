@@ -6,7 +6,7 @@ on:
     branches:
       - develop
   workflow_dispatch:
-    
+
 permissions:
   contents: write  
   pull-requests: write
@@ -67,3 +67,4 @@ jobs:
           body: "Este Pull Request actualiza las opciones de componentes en Deploy.yml."
           base: "develop"  
           commit-message: "Actualización automática de opciones de componentes"
+          branch: "feature/change-inputs-components"
