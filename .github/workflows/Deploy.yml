@@ -19,7 +19,9 @@ on:
                 required: true
                 type: choice
                 options:
-                           - Seleccionar componentes
+                          - ./app/fichero20
+                          - ./api/fichero10
+                          - ./database/fichero30
 jobs:
     deploy-inputs:
         runs-on: ubuntu-latest
