@@ -33,20 +33,12 @@ jobs:
             echo "Contenido de lista_componentes.txt:"
             cat lista_componentes.txt
         
-            awk -v new_options="$options" '
-            /component:/ { print; in_block=1; next }
-            /options:/ && in_block {
-              print
-              print new_options
-              skip=1
-              next
-            }
-            in_block && skip {
-              if (/^[[:space:]]*-/) next
-              else { in_block=0; skip=0 }
-            }
-            { print }
-            ' .github/workflows/Deploy.yml > temp && mv temp .github/workflows/Deploy.yml
+             sed -i "/options:/,/^$/{
+                /options:/!b
+                /options:/a\\
+              $options
+            }" .github/workflows/Deploy.yml
+            
       - name: Verificar Deploy.yml modificado
         run: cat .github/workflows/Deploy.yml
         
