@@ -15,11 +15,18 @@ jobs:
   actualizar-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v2.1.0
+        with:
+          app_id: ${{ secrets.ID_GIT_APP }}
+          private_key: ${{ secrets.APP_SEMANTIC_RELEASE_PRIVATE_KEY }}  
 
       - name: Clonar repositorio
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.generate_token.outputs.token }}
+      
       - name: Conseguir los nombres de los .json
         id: lista-json
         run: |
@@ -60,7 +67,7 @@ jobs:
       - name: Crear Pull Request en el repositorio oficial usando create-pull-request
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.generate_token.outputs.token }}
           title: "Actualización de opciones de componentes en Deploy.yml"
           body: "Este Pull Request actualiza las opciones de componentes en Deploy.yml."
           base: "main"
