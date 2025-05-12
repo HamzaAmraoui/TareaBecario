@@ -20,7 +20,7 @@ jobs:
         uses: tibdex/github-app-token@v2.1.0
         with:
           app_id: ${{ secrets.ID_GIT_APP }}
-          private_key: ${{ secrets.APP_SEMANTIC_RELEASE_PRIVATE_KEY }}  
+          private_key: ${{ secrets.GIT_APP_TOKEN }}  
 
       - name: Clonar repositorio
         uses: actions/checkout@v4
