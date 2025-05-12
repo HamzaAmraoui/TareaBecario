@@ -31,7 +31,6 @@ jobs:
 
       - name: Actualizar los nuevos componentes
         run: |
-             # Variables de entrada
              componentes="${{ steps.lista-json.outputs.archivos }}"
              options=$(echo "$componentes" | sed 's/^/                          - /')
          
