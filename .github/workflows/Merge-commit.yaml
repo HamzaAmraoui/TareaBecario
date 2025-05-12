@@ -24,10 +24,9 @@ jobs:
       - name: Conseguir rutas completas de los .json
         id: lista-json
         run: |
-          all_paths=$(find . -type f -name "*.json" | sed 's/\.json$//')
-          
+          find . -type f -name "*.json" | sed 's/\.json$//' > json_paths.txt
           echo "archivos<<EOF" >> $GITHUB_OUTPUT
-          echo "$all_paths" >> $GITHUB_OUTPUT
+          cat json_paths.txt >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Actualizar los nuevos componentes
