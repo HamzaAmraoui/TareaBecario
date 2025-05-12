@@ -8,69 +8,70 @@ on:
   workflow_dispatch:
 
 permissions:
-      contents: write  
-      pull-requests: write
+  contents: write  
+  pull-requests: write
   
 jobs:
   actualizar-deploy:
     runs-on: ubuntu-latest
     steps:
-      
+
       - name: Clonar repositorio
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.MY_TOKEN  }}
-
-      - name: Conseguir los nombres de los .json
+          token: ${{ secrets.MY_TOKEN }}
+      
+      - name: Conseguir rutas completas de los .json
         id: lista-json
         run: |
-          all_archivos=$(find . -maxdepth 1 -type f -name "*.json" -exec basename {} .json \;)
-           
-           echo "archivos<<EOF" >> $GITHUB_OUTPUT
-           echo "$all_archivos" >> $GITHUB_OUTPUT
-           echo "EOF" >> $GITHUB_OUTPUT
-           
+          all_paths=$(find . -type f -name "*.json" | sed 's/\.json$//') > lista_componentes.txt
+          
+          echo "archivos<<EOF" >> $GITHUB_OUTPUT
+          echo lista_componentes.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Actualizar los nuevos componentes
         run: |
-          componentes="${{ steps.lista-json.outputs.archivos }}"
-          
-          options=$(echo "$componentes" | sed 's/^/                          - /')
+            options=""
+            while IFS= read -r line; do
+              options="${options}                          - ${line}"$'\n'
+            done < lista_componentes.txt
+        
+            echo "DEBUG Opciones generadas:"
+            echo "$options"
+        
+            awk -v new_options="$options" '
+            /component:/ { print; in_block=1; next }
+            /options:/ && in_block {
+              print
+              print new_options
+              skip=1
+              next
+            }
+            in_block && skip {
+              if (/^[[:space:]]*-/) next
+              else { in_block=0; skip=0 }
+            }
+            { print }
+            ' .github/workflows/Deploy.yml > temp && mv temp .github/workflows/Deploy.yml
 
-          awk -v new_options="$options" '
-          /component:/ { print; in_block=1; next }
-          /options:/ && in_block {
-          print
-          print new_options
-          skip=1
-          next
-          }
-          in_block && skip {
-          if (/^[[:space:]]*-/) next
-          else { in_block=0; skip=0 }
-          }
-          { print }
-          ' .github/workflows/Deploy.yml > temp && mv temp .github/workflows/Deploy.yml
-      
+
       - name: Crear nueva rama 
         run: |
-            git config --global user.name "${{github.actor}}"
-            git config --global user.email "hamzafuego2@gmail.com"
-            git checkout -B feature/change-inputs-components
-            git add .github/workflows/Deploy.yml
-            git commit -m "Actualización automática de opciones de componentes"
-            git push --set-upstream origin feature/change-inputs-components -f 
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "hamzafuego2@gmail.com"
+          git checkout -B feature/change-inputs-components
+          git add .github/workflows/Deploy.yml
+          git commit -m "Actualización automática de opciones de componentes"
+          git push --set-upstream origin feature/change-inputs-components -f
 
-        
-      - name: Crear Pull Request
-        run: |
-              curl -X POST \
-                -H "Authorization: Bearer ${{ secrets.MY_TOKEN }}" \
-                -H "Accept: application/vnd.github.v3+json" \
-                https://api.github.com/repos/${{ github.repository }}/pulls \
-                -d '{
-                  "title": "Actualización de opciones de componentes en Deploy.yml",
-                  "head": "feature/change-inputs-components",
-                  "base": "develop",
-                  "body": "Este Pull Request actualiza las opciones de componentes en Deploy.yml."
-                }'
+      - name: Crear Pull Request en el repositorio oficial usando create-pull-request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.MY_TOKEN }}
+          title: "Actualización de opciones de componentes en Deploy.yml"
+          body: "Este Pull Request actualiza las opciones de componentes en Deploy.yml."
+          base: "develop"  
+          commit-message: "Actualización automática de opciones de componentes"
+          branch: "feature/change-inputs-components"
 
