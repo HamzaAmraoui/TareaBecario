@@ -19,8 +19,8 @@ on:
                 required: true
                 type: choice
                 options:
-                          - ./app/fichero20
-                          - ./api/fichero10
+                          - ./app/fichero2
+                          - ./api/fichero40
                           - ./database/fichero30
 jobs:
     deploy-inputs:
