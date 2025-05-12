@@ -35,41 +35,28 @@ jobs:
              componentes="${{ steps.lista-json.outputs.archivos }}"
              options=$(echo "$componentes" | sed 's/^/                          - /')
          
-             # Mostrar valores para depuración
              echo "Componentes a insertar: $options"
          
-             # Usar awk para insertar las opciones de manera correcta
              awk -v new_options="$options" '
-             # Buscar la línea con "component:" y marcar el bloque donde insertaremos
              /component:/ { print; in_block=1; next }
-             # Cuando se encuentra "options:", insertamos las nuevas opciones
+
              /options:/ && in_block {
                print
                print new_options
                skip=1
                next
              }
-             # Continuar con el bloque sin insertar nuevas opciones
+
              in_block && skip {
                if (/^[[:space:]]*-/) next
                else { in_block=0; skip=0 }
              }
-             # Imprimir cualquier otra línea
+
              { print }
              ' .github/workflows/Deploy.yml > temp && mv temp .github/workflows/Deploy.yml
          
-             # Verificación de la modificación del archivo YAML
-             cat .github/workflows/Deploy.yml
-         
-      - name: Crear nueva rama 
-        run: |
-            git config --global user.name "${{github.actor}}"
-            git config --global user.email "hamzafuego2@gmail.com"
-            git checkout -B feature/change-inputs-components
-            git add .github/workflows/Deploy.yml
-            git commit -m "Actualización automática de opciones de componentes"
-            git push --set-upstream origin feature/change-inputs-components -f 
 
+             cat .github/workflows/Deploy.yml
 
       - name: Crear Pull Request en el repositorio oficial usando create-pull-request
         uses: peter-evans/create-pull-request@v4
