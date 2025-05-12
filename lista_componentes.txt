@@ -1,0 +1,3 @@
+./app/fichero20
+./api/fichero10
+./database/fichero30
