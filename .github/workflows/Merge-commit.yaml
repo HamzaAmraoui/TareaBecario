@@ -19,7 +19,7 @@ jobs:
       - name: Clonar repositorio
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GIT_APP_TOKEN  }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Conseguir los nombres de los .json
         id: lista-json
         run: |
@@ -60,7 +60,7 @@ jobs:
       - name: Crear Pull Request en el repositorio oficial usando create-pull-request
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.GIT_APP_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           title: "Actualización de opciones de componentes en Deploy.yml"
           body: "Este Pull Request actualiza las opciones de componentes en Deploy.yml."
           base: "main"
