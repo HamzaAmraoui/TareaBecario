@@ -1,6 +1,8 @@
 name: Actualizar Componentes
 run-name: Push hecho por parte de ${{ github.actor }}
 
+
+
 on: 
   push:
     branches:
