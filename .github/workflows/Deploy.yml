@@ -19,9 +19,9 @@ on:
                 required: true
                 type: choice
                 options:
-                          - ./app/fichero20
-                          - ./api/fichero10
-                          - ./database/fichero30
+                          - ./app/fichero200
+                          - ./api/fichero4
+                          - ./database/fichero300
 jobs:
     deploy-inputs:
         runs-on: ubuntu-latest
