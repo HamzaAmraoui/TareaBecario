@@ -4,7 +4,7 @@ run-name: Push hecho por parte de ${{ github.actor }}
 on: 
   push:
     branches:
-      - develop
+      - main
   workflow_dispatch:
 
 jobs:
@@ -66,6 +66,6 @@ jobs:
           token: ${{ steps.generate_token.outputs.token }}
           title: "Actualización de opciones de componentes en Deploy.yml"
           body: "Este Pull Request actualiza las opciones de componentes en Deploy.yml."
-          base: "develop"
+          base: "main"
           commit-message: "Actualización automática de opciones de componentes"
           branch: "feature/change-inputs-components"
